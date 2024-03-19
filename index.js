@@ -42,39 +42,7 @@ async function run() {
     res.send(result)
    })
 
-  //  app.get('/recommendation',async(req,res)=>{
-  //   const cursor=recommendationCollection.find()
-  //   const result=await cursor.toArray();
-  //   res.send(result)
-  //  })
 
-  // app.get('/recommendation', async (req, res) => {
-  //   try {
-  //     const result = await recommendationCollection.aggregate([
-  //       {
-  //         $group: {
-  //           _id: "$songId",
-  //           title: { $first: "$title" },
-  //           artist: { $first: "$artist" },
-  //           audio_file: { $first: "$audio_file" },
-  //           image: { $first: "$image" },
-  //           clickCount: { $sum: "$clickCount" }
-  //         }
-  //       },
-  //       {
-  //         $sort: { clickCount: 1 }
-  //       },
-  //       {
-  //         $sort: { clickCount: -1 }
-  //       }
-  //     ]).toArray();
-  
-  //     res.send(result);
-  //   } catch (error) {
-  //     console.error('Error fetching recommendations:', error);
-  //     res.status(500).send('Error fetching recommendations');
-  //   }
-  // });
   
 
   app.get('/recommendation', async (req, res) => {
