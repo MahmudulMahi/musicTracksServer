@@ -10,7 +10,7 @@ app.use(cors())
 app.use(express.json())
 
 
-console.log(process.env.DB_PASS)
+
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.8zyyzcn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -47,9 +47,44 @@ async function run() {
   //   const result=await cursor.toArray();
   //   res.send(result)
   //  })
+
+  // app.get('/recommendation', async (req, res) => {
+  //   try {
+  //     const result = await recommendationCollection.aggregate([
+  //       {
+  //         $group: {
+  //           _id: "$songId",
+  //           title: { $first: "$title" },
+  //           artist: { $first: "$artist" },
+  //           audio_file: { $first: "$audio_file" },
+  //           image: { $first: "$image" },
+  //           clickCount: { $sum: "$clickCount" }
+  //         }
+  //       },
+  //       {
+  //         $sort: { clickCount: 1 }
+  //       },
+  //       {
+  //         $sort: { clickCount: -1 }
+  //       }
+  //     ]).toArray();
+  
+  //     res.send(result);
+  //   } catch (error) {
+  //     console.error('Error fetching recommendations:', error);
+  //     res.status(500).send('Error fetching recommendations');
+  //   }
+  // });
+  
+
   app.get('/recommendation', async (req, res) => {
+    const userEmail = req.query.email; 
+    
     try {
       const result = await recommendationCollection.aggregate([
+        {
+          $match: { email: userEmail } 
+        },
         {
           $group: {
             _id: "$songId",
@@ -61,19 +96,18 @@ async function run() {
           }
         },
         {
-          $sort: { clickCount: 1 }
-        },
-        {
-          $sort: { clickCount: -1 }
+          $sort: { clickCount: -1 } 
         }
       ]).toArray();
-  
+    
       res.send(result);
     } catch (error) {
       console.error('Error fetching recommendations:', error);
       res.status(500).send('Error fetching recommendations');
     }
   });
+  
+
   
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
